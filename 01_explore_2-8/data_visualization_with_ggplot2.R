@@ -391,3 +391,66 @@ ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) +
 ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) +
   geom_point(mapping = aes(color = drv))
 
+# 3.7 Statistical transformations
+
+# 3.7.1 Exercises
+
+# 1. What is the default geom associated with stat_summary()?
+# How could you rewrite the previous plot to use that geom function
+# instead of the stat function?
+
+ggplot(data = diamonds, mapping = aes(x = cut, y = depth)) +
+  stat_summary(
+    fun.ymin = min,
+    fun.ymax = max,
+    fun.y = median
+  )
+
+ggplot(data = diamonds, mapping = aes(x = cut, y = depth)) +
+  geom_pointrange(
+    stat = "summary",
+    fun.ymin = min,
+    fun.ymax = max,
+    fun.y = median
+  )
+
+# 2. What does geom_col() do? How is it different to geom_bar()?
+
+ggplot(data = diamonds, mapping = aes(x = cut)) +
+  geom_bar()
+
+ggplot(data = diamonds, mapping = aes(x = cut, y = depth)) +
+  geom_col()
+
+# geom_col has uses the identity stat, so it expects that a variable 
+# already exists for the height of the bars
+
+# 3. Most geoms and stats come in pairs that are almost always used in concert. 
+# Read through the documentation and make a list of all the pairs. 
+# What do they have in common?
+
+# to be filled
+
+# 4. What variables does stat_smooth() compute? 
+# What parameters control its behaviour?
+
+?stat_smooth
+
+# y, ymin, ymax, se
+# method is one of parameters that control its behaviour
+
+# 5. In our proportion bar chart, we need to set group = 1. Why? 
+# In other words what is the problem with these two graphs?
+
+ggplot(data = diamonds) + 
+  geom_bar(mapping = aes(x = cut, y = ..prop..))
+ggplot(data = diamonds) + 
+  geom_bar(mapping = aes(x = cut, fill = color, y = ..prop..))
+
+# without group = 1, geom_bar make proportions within each group
+
+ggplot(data = diamonds) + 
+  geom_bar(mapping = aes(x = cut, y = ..prop.., group = 1))
+ggplot(data = diamonds) + 
+  geom_bar(mapping = aes(x = cut, fill = color, y = ..prop.., group = color))
+
